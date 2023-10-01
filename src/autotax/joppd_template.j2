@@ -1,0 +1,133 @@
+<ObrazacJOPPD
+	xmlns="http://e-porezna.porezna-uprava.hr/sheme/zahtjevi/ObrazacJOPPD/v1-1" verzijaSheme="1.1">
+	<Metapodaci
+		xmlns="http://e-porezna.porezna-uprava.hr/sheme/Metapodaci/v2-0">
+		<Naslov dc="http://purl.org/dc/elements/1.1/title">Izvješće o primicima, porezu na dohodak i prirezu te doprinosima za obvezna osiguranja</Naslov>
+		<Autor dc="http://purl.org/dc/elements/1.1/creator">{{ first_name | upper }} {{ last_name | upper }}</Autor>
+		<Datum dc="http://purl.org/dc/elements/1.1/date">{{ now.strftime('%Y-%m-%dT%H:%M:%S') }}</Datum>
+		<Format dc="http://purl.org/dc/elements/1.1/format">text/xml</Format>
+		<Jezik dc="http://purl.org/dc/elements/1.1/language">hr-HR</Jezik>
+		<Identifikator dc="http://purl.org/dc/elements/1.1/identifier">{{ document_id }}</Identifikator>
+		<Uskladjenost dc="http://purl.org/dc/terms/conformsTo">ObrazacJOPPD-v1-1</Uskladjenost>
+		<Tip dc="http://purl.org/dc/elements/1.1/type">Elektronički obrazac</Tip>
+		<Adresant>Ministarstvo Financija, Porezna uprava, Zagreb</Adresant>
+	</Metapodaci>
+	<StranaA>
+		<DatumIzvjesca>{{ date_string.strftime('%Y-%m-%d') }}</DatumIzvjesca>
+		<OznakaIzvjesca>{{ joppd_code }}</OznakaIzvjesca>
+		<VrstaIzvjesca>8</VrstaIzvjesca>
+		<PodnositeljIzvjesca>
+			<Ime>{{ first_name | upper }}</Ime>
+			<Prezime>{{ last_name | upper }}</Prezime>
+			<Adresa>
+				<Mjesto>{{ town | upper }}</Mjesto>
+				<Ulica>{{ street_name | upper }}</Ulica>
+				<Broj>{{ "{:04}".format(street_number) }}</Broj>
+			</Adresa>
+			<Email>{{ email }}</Email>
+			<OIB>{{ oib }}</OIB>
+			<Oznaka>4</Oznaka>
+		</PodnositeljIzvjesca>
+		<BrojOsoba>1</BrojOsoba>
+		<BrojRedaka>1</BrojRedaka>
+		<PredujamPoreza>
+			<P1>0.00</P1>
+			<P11>0.00</P11>
+			<P12>0.00</P12>
+			<P2>{{ (tax+surtax) | float | round(2) }}</P2>
+			<P3>0.00</P3>
+			<P4>0.00</P4>
+			<P5>0.00</P5>
+			<P6>0.00</P6>
+		</PredujamPoreza>
+		<Doprinosi>
+			<GeneracijskaSolidarnost>
+				<P1>0.00</P1>
+				<P2>0.00</P2>
+				<P3>0.00</P3>
+				<P4>0.00</P4>
+				<P5>0.00</P5>
+				<P6>0.00</P6>
+			</GeneracijskaSolidarnost>
+			<KapitaliziranaStednja>
+				<P1>0.00</P1>
+				<P2>0.00</P2>
+				<P3>0.00</P3>
+				<P4>0.00</P4>
+				<P5>0.00</P5>
+			</KapitaliziranaStednja>
+			<ZdravstvenoOsiguranje>
+				<P1>0.00</P1>
+				<P2>0.00</P2>
+				<P3>0.00</P3>
+				<P4>0.00</P4>
+				<P5>0.00</P5>
+				<P6>0.00</P6>
+				<P7>0.00</P7>
+				<P8>0.00</P8>
+				<P9>0.00</P9>
+				<P10>0.00</P10>
+			</ZdravstvenoOsiguranje>
+			<Zaposljavanje>
+				<P1>0.00</P1>
+				<P2>0.00</P2>
+				<P3>0.00</P3>
+			</Zaposljavanje>
+		</Doprinosi>
+		<IsplaceniNeoporeziviPrimici>0.00</IsplaceniNeoporeziviPrimici>
+		<KamataMO2>0.00</KamataMO2>
+		<UkupniNeoporeziviPrimici>0.00</UkupniNeoporeziviPrimici>
+		<NaknadaZaposljavanjeInvalida>
+			<P1>0</P1>
+			<P2>0.00</P2>
+		</NaknadaZaposljavanjeInvalida>
+		<IzvjesceSastavio>
+			<Ime>{{ first_name | upper }}</Ime>
+			<Prezime>{{ last_name | upper }}</Prezime>
+		</IzvjesceSastavio>
+	</StranaA>
+	<StranaB>
+		<Primatelji>
+			<P>
+				<P1>1</P1>
+				<P2>{{ city_code }}</P2>
+				<P3>99840</P3>
+				<P4>{{ oib }}</P4>
+				<P5>{{ first_name | upper }} {{ last_name | upper }}</P5>
+				<P61>1003</P61>
+				<P62>1003</P62>
+				<P71>0</P71>
+				<P72>0</P72>
+				<P8>0</P8>
+				<P9>0</P9>
+				<P10>0</P10>
+				<P100>0</P100>
+				<P101>{{ year_first_day.strftime('%Y-%m-%d') }}</P101>
+				<P102>{{ year_last_day.strftime('%Y-%m-%d')}}</P102>
+				<P11>{{ bruto | round(2) | float }}</P11>
+				<P12>0.00</P12>
+				<P121>0.00</P121>
+				<P122>0.00</P122>
+				<P123>0.00</P123>
+				<P124>0.00</P124>
+				<P125>0.00</P125>
+				<P126>0.00</P126>
+				<P127>0.00</P127>
+				<P128>0.00</P128>
+				<P129>0.00</P129>
+				<P131>0.00</P131>
+				<P132>0.00</P132>
+				<P133>{{ bruto | round(2) | float }}</P133>
+				<P134>0.00</P134>
+				<P135>{{ bruto | round(2) | float }}</P135>
+				<P141>{{ tax | round(2) | float }}</P141>
+				<P142>{{ surtax | round(2) | float }}</P142>
+				<P151>0</P151>
+				<P152>0.00</P152>
+				<P161>5</P161>
+				<P162>{{ neto | round(2) | float }}</P162>
+				<P17>0.00</P17>
+			</P>
+		</Primatelji>
+	</StranaB>
+</ObrazacJOPPD>

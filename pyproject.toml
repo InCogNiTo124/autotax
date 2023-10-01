@@ -1,0 +1,54 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "autotax"
+dynamic = ["version"]
+description = ''
+readme = "README.md"
+requires-python = ">=3.7"
+license = "MIT"
+keywords = []
+authors = [
+  { name = "InCogNiTo124", email = "msmetko@google.com" },
+]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3.7",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: Implementation :: CPython",
+  "Programming Language :: Python :: Implementation :: PyPy",
+]
+dependencies = [
+  "typer",
+  "requests",
+  "jinja2",
+]
+
+[project.urls]
+Documentation = "https://github.com/photomath/autotax#readme"
+Issues = "https://github.com/photomath/autotax/issues"
+Source = "https://github.com/photomath/autotax"
+
+[project.scripts]
+autotax = "autotax.cli:APP"
+
+[tool.hatch.version]
+path = "src/autotax/__about__.py"
+
+[tool.hatch.build]
+include = [
+  "codes.json",
+  "surtax.json",
+  "joppd_template.j2",
+  "src/*",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/autotax"]
+
