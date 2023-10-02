@@ -29,6 +29,28 @@ CAPITAL_INCOME_TAX = fractions.Fraction(20, 100)
 # but not every place is assigned a surtax
 assert SURTAX.keys() <= CODES.keys()
 
+def check_oib(oib: str):
+    """Check if OIB is valid and return True if it is."""
+    OIB_LEN = 11
+    
+    if len(oib) != OIB_LEN or not oib.isdigit():
+        return False
+
+    medu_ostatak = 0
+    for digit in oib[:-1]:
+        medu_ostatak += int(digit)
+        medu_ostatak %= 10
+        if medu_ostatak == 0:
+            medu_ostatak = 10
+        medu_ostatak *= 2
+        medu_ostatak %= 11
+
+    kontrolni = OIB_LEN - medu_ostatak
+    if kontrolni == 10:
+        kontrolni = 0
+
+    return kontrolni == int(oib[-1])
+
 def conversion_rate_for_date(date: datetime):
     hnb_url = "https://api.hnb.hr/tecajn-eur/v3?datum-primjene={}&valuta=USD"
     response = requests.get(
@@ -109,20 +131,25 @@ def calculate_joppd_code(date):
     day_of_year = date.strftime('%j')
     return f"{year}{day_of_year}"
 
-def check_town(_a, _b, value: str) -> str:
-    if value not in CODES.keys():
+def town_callback(_a, _b, value: str) -> str:
+    if value.lower() not in CODES.keys():
         candidates = difflib.get_close_matches(value, list(CODES.keys()))
         dym = format_did_you_mean(candidates)
         raise typer.BadParameter(f"Wrong value '{value}' - did you mean {dym}?")
+    return value
+
+def oib_callback(_a, _b, value: str) -> str:
+    if not check_oib(value):
+        raise typer.BadParameter(f"OIB '{value}' does not pass validity checks. Try again.")
     return value
 
 @APP.command()
 def main(
     first_name: Annotated[str, typer.Option(prompt=True)],
     last_name: Annotated[str, typer.Option(prompt=True)],
-    oib: Annotated[str, typer.Option(prompt="OIB")],
+    oib: Annotated[str, typer.Option(prompt="OIB", callback=oib_callback)],
     date: Annotated[datetime, typer.Option(prompt=True)],
-    town: Annotated[str, typer.Option(prompt=True, callback=check_town)],
+    town: Annotated[str, typer.Option(prompt=True, callback=town_callback)],
     street_name: Annotated[str, typer.Option(prompt="Street name (without number)")],
     street_number: Annotated[int, typer.Option(prompt=True)],
     email_address: Annotated[str, typer.Option(prompt=True)],
