@@ -9,6 +9,7 @@ import requests
 import jinja2
 import uuid
 from pathlib import Path
+import difflib
 
 import json
 
@@ -96,7 +97,11 @@ def generate_joppd(*,
 
     return form_name
 
+def format_did_you_mean(candidates):
 
+    if len(candidates) == 1:
+        return f'"{candidates[0]}"'
+    return ', '.join(f'"{s}"' for s in candidates[:-1]) + f' or "{candidates[-1]}"'
 
 def calculate_joppd_code(date):
     # last two characters of the year
@@ -104,13 +109,20 @@ def calculate_joppd_code(date):
     day_of_year = date.strftime('%j')
     return f"{year}{day_of_year}"
 
+def check_town(_a, _b, value: str) -> str:
+    if value not in CODES.keys():
+        candidates = difflib.get_close_matches(value, list(CODES.keys()))
+        dym = format_did_you_mean(candidates)
+        raise typer.BadParameter(f"Wrong value '{value}' - did you mean {dym}?")
+    return value
+
 @APP.command()
 def main(
     first_name: Annotated[str, typer.Option(prompt=True)],
     last_name: Annotated[str, typer.Option(prompt=True)],
     oib: Annotated[str, typer.Option(prompt="OIB")],
     date: Annotated[datetime, typer.Option(prompt=True)],
-    town: Annotated[str, typer.Option(prompt=True)],
+    town: Annotated[str, typer.Option(prompt=True, callback=check_town)],
     street_name: Annotated[str, typer.Option(prompt="Street name (without number)")],
     street_number: Annotated[int, typer.Option(prompt=True)],
     email_address: Annotated[str, typer.Option(prompt=True)],
