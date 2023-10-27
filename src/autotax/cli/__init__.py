@@ -177,12 +177,12 @@ def main(
     typer.echo(f"INFO: Code for {town}: {CODES[town]}")
     typer.echo(f"INFO: JOPPD code: {joppd_code}")
     typer.echo(f"INFO: Conversion rate ($ => €) @ {date.date().strftime('%Y-%m-%d')}: {float(conversion_rate)}")
-    typer.echo(f"INFO: {gsu_amount} GSUs × {float(gsu_price)}$ = {float(total_money_usd)}$ = {float(total_money_eur)}€")
-    typer.echo(f"INFO: bruto  = {float(bruto)}€")
-    typer.echo(f"INFO: tax    = {float(tax)}€")
-    typer.echo(f"INFO: surtax = {float(surtax)}€")
-    typer.echo(f"INFO: neto   = {float(neto)}€")
-    typer.echo(f"INFO: TOTAL COST (tax+surtax) = {float(tax+surtax)}€")
+    typer.echo(f"INFO: {gsu_amount} GSUs × {float(gsu_price):.2f}$ = {float(total_money_usd):.2f}$ = {float(total_money_eur):.2f}€")
+    typer.echo(f"INFO: bruto  = {float(bruto):.2f}€")
+    typer.echo(f"INFO: tax    = {float(tax):.2f}€")
+    typer.echo(f"INFO: surtax = {float(surtax):.2f}€")
+    typer.echo(f"INFO: neto   = {float(neto):.2f}€")
+    typer.echo(f"INFO: TOTAL COST (tax+surtax) = {float(tax+surtax):.2f}€")
     if typer.confirm("Do you want to generate JOPPD?", default=True):
         filename = generate_joppd(
                 first_name=first_name,
