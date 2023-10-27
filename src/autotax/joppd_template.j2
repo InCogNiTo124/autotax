@@ -34,7 +34,7 @@
 			<P1>0.00</P1>
 			<P11>0.00</P11>
 			<P12>0.00</P12>
-			<P2>{{ (tax+surtax) | float | round(2) }}</P2>
+			<P2>{{ "%.2f" | format((tax+surtax) | float) }}</P2>
 			<P3>0.00</P3>
 			<P4>0.00</P4>
 			<P5>0.00</P5>
@@ -104,7 +104,7 @@
 				<P100>0</P100>
 				<P101>{{ year_first_day.strftime('%Y-%m-%d') }}</P101>
 				<P102>{{ year_last_day.strftime('%Y-%m-%d')}}</P102>
-				<P11>{{ bruto | round(2) | float }}</P11>
+				<P11>{{ "%.2f" | format(bruto | float) }}</P11>
 				<P12>0.00</P12>
 				<P121>0.00</P121>
 				<P122>0.00</P122>
@@ -117,15 +117,15 @@
 				<P129>0.00</P129>
 				<P131>0.00</P131>
 				<P132>0.00</P132>
-				<P133>{{ bruto | round(2) | float }}</P133>
+				<P133>{{ "%.2f" | format(bruto | float) }}</P133>
 				<P134>0.00</P134>
-				<P135>{{ bruto | round(2) | float }}</P135>
-				<P141>{{ tax | round(2) | float }}</P141>
-				<P142>{{ surtax | round(2) | float }}</P142>
+				<P135>{{ "%.2f" | format(bruto | float) }}</P135>
+				<P141>{{ "%.2f" | format(tax | float) }}</P141>
+				<P142>{{ "%.2f" | format(surtax | float) }}</P142>
 				<P151>0</P151>
 				<P152>0.00</P152>
 				<P161>5</P161>
-				<P162>{{ neto | round(2) | float }}</P162>
+				<P162>{{ "%.2f" | format(neto | float) }}</P162>
 				<P17>0.00</P17>
 			</P>
 		</Primatelji>
