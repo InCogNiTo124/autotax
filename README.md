@@ -100,14 +100,14 @@ By `Host OS` I mean your Linux OS. We'll be exposing the `~/Public` directory of
 
 Open up `Windows explorer`, go to `This PC` and `<Right Click> -> Add a network location`.
 
-![Add a network location for the Public folder][windows3.png]
+![Add a network location for the Public folder](windows3.png)
 
 Click `Next`
 Click `Next` again.
 
 Write the IP address above, _but with slashes substituted with backslashes_, like this:
 
-![Write the url with backslashes][windows3-2.png]
+![Write the url with backslashes](windows3-2.png)
 
 Press `OK`.
 
@@ -117,13 +117,13 @@ You can now visit your `~/Public/porezi` folder in Windows! If you put your gene
 
 Login to `https://e-porezna.porezna-uprava.hr` using your favourite authentication method.
 
-![e-porezna login page][windows4.png]
+![e-porezna login page](windows4.png)
 
 ### 6. Install the necessary software
 
 Visit `Dostavi obrazac` and click `JOPPD -> Dostavi datoteku`.
 
-![This is where you put your XML][windows5.png]
+![This is where you put your XML](windows5.png)
 
 Click the button `Odaberi datoteku`.
 
