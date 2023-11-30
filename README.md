@@ -15,6 +15,8 @@
 
 ## Usage
 
+![Animation of the example usage. All important values are fake](ascii.cast-optim.gif)
+
 ```console
 $ autotax --help
 Usage: autotax [OPTIONS]
