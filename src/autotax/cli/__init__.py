@@ -20,14 +20,12 @@ ROOT = Path(__file__).parent.parent
 with (ROOT / "codes.json").open() as f:
     CODES = json.load(f)
 
-with (ROOT / "surtax.json").open() as f:
-    SURTAX = json.load(f)
-
-CAPITAL_INCOME_TAX = fractions.Fraction(20, 100)
+with (ROOT / "tax_2024.json").open() as f:
+    TAX_PER_TOWN = json.load(f)
 
 # every place in surtax must appear in codes
 # but not every place is assigned a surtax
-assert SURTAX.keys() <= CODES.keys()
+# assert TAX_PER_TOWN.keys() <= CODES.keys()
 
 def check_oib(oib: str):
     """Check if OIB is valid and return True if it is."""
@@ -59,29 +57,30 @@ def conversion_rate_for_date(date: datetime):
     srednji_tecaj = response['srednji_tecaj']
     return fractions.Fraction(srednji_tecaj.replace(',', '.'))
 
-def taxify(total_money, surtax_rate):
-    bruto_raw = total_money / (1-CAPITAL_INCOME_TAX*(1+surtax_rate))
+def taxify(total_money, tax_rate):
+    bruto_raw = total_money / (1-tax_rate)
     bruto = round(bruto_raw, 2)
-    tax = round(bruto*CAPITAL_INCOME_TAX, 2)
-    surtax = round(tax*surtax_rate, 2)
+    tax = round(bruto*tax_rate, 2)
+    surtax = fractions.Fraction(0)
     neto = bruto - tax - surtax
     return bruto, tax, surtax, neto
 
 def generate_joppd(*,
     first_name: str,
     last_name: str,
-                date: datetime,
-                joppd_code: str,
-                town: str,
-                street_name: str,
-                email_address: str,
-                oib: str,
-                tax: fractions.Fraction,
-                surtax: fractions.Fraction,
-                bruto: fractions.Fraction,
-                neto: fractions.Fraction,
-                street_number: int
+    date: datetime,
+    joppd_code: str,
+    town: str,
+    street_name: str,
+    email_address: str,
+    oib: str,
+    tax: fractions.Fraction,
+    surtax: fractions.Fraction,
+    bruto: fractions.Fraction,
+    neto: fractions.Fraction,
+    street_number: int
     ):
+    print(date)
     form_name_template = "ObrazacJOPPD_{oib}_{day:02}{month:02}{year:04}_{joppd_code}_8.xml"
     form_name = form_name_template.format(
             oib=oib,
@@ -91,6 +90,7 @@ def generate_joppd(*,
             year=date.year)
     year_start = datetime(date.year, 1, 1, 0, 0, 0)
     year_end = datetime(date.year, 12, 31, 23, 59, 59)
+    print('ok', date, year_start, year_end)
     env = jinja2.Environment()
     template = env.from_string((ROOT / 'joppd_template.j2').read_text())
     rendered = template.render(
@@ -120,7 +120,6 @@ def generate_joppd(*,
     return form_name
 
 def format_did_you_mean(candidates):
-
     if len(candidates) == 1:
         return f'"{candidates[0]}"'
     return ', '.join(f'"{s}"' for s in candidates[:-1]) + f' or "{candidates[-1]}"'
@@ -158,31 +157,30 @@ def main(
     ):
     town = town.lower()
     if town not in CODES:
-        print(f'ERROR: town {town} does not exist. Exiting!')  # TODO add suggested towns
+        print(f'ERROR: town {town} does not exist. Exiting!')
         raise typer.Exit(code=1)
     gsu_price = fractions.Fraction(gsu_price_raw)
-    surtax_rate = fractions.Fraction(SURTAX[town], 100)
+    tax_rate = fractions.Fraction.from_decimal(fractions.Decimal.from_float(TAX_PER_TOWN[town])) / 100
     typer.echo(f"Person: {first_name.capitalize()} {last_name.capitalize()}")
     typer.echo(f"        {street_name.capitalize()} {str(street_number)}, {town}")
     typer.echo(f"        {email_address}")
     typer.echo(f"        OIB: {oib}")
-    typer.echo(f"surtax: {int(100*surtax_rate)}%")
+    typer.echo(f"tax:    {int(100*tax_rate)}%")
     _ = typer.confirm('Does this look correct?', abort=True)
     typer.echo()
     joppd_code = calculate_joppd_code(date.date())
     conversion_rate = conversion_rate_for_date(date)
     total_money_usd = gsu_amount * gsu_price
     total_money_eur = round(total_money_usd / conversion_rate, 2)
-    bruto, tax, surtax, neto = taxify(total_money_eur, surtax_rate)
+    bruto, tax, surtax, neto = taxify(total_money_eur, tax_rate)
     typer.echo(f"INFO: Code for {town}: {CODES[town]}")
     typer.echo(f"INFO: JOPPD code: {joppd_code}")
-    typer.echo(f"INFO: Conversion rate ($ => €) @ {date.date().strftime('%Y-%m-%d')}: {float(conversion_rate)}")
+    typer.echo(f"INFO: Conversion rate (€ => $) @ {date.date().strftime('%Y-%m-%d')}: {float(conversion_rate)}")
     typer.echo(f"INFO: {gsu_amount} GSUs × {float(gsu_price):.2f}$ = {float(total_money_usd):.2f}$ = {float(total_money_eur):.2f}€")
     typer.echo(f"INFO: bruto  = {float(bruto):.2f}€")
     typer.echo(f"INFO: tax    = {float(tax):.2f}€")
-    typer.echo(f"INFO: surtax = {float(surtax):.2f}€")
     typer.echo(f"INFO: neto   = {float(neto):.2f}€")
-    typer.echo(f"INFO: TOTAL COST (tax+surtax) = {float(tax+surtax):.2f}€")
+    typer.echo(f"INFO: TOTAL COST (tax) = {float(tax):.2f}€")
     if typer.confirm("Do you want to generate JOPPD?", default=True):
         filename = generate_joppd(
                 first_name=first_name,
