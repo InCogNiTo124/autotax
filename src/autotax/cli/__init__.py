@@ -14,6 +14,7 @@ import difflib
 import json
 import locale
 
+# en_HR isn't widely available so en_DK is used instead.
 locale.setlocale(locale.LC_NUMERIC, "en_DK.UTF-8")
 
 APP = typer.Typer()
