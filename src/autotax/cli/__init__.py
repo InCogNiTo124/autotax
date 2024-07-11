@@ -12,6 +12,9 @@ from pathlib import Path
 import difflib
 
 import json
+import locale
+
+locale.setlocale(locale.LC_NUMERIC, "en_DK.UTF-8")
 
 APP = typer.Typer()
 
@@ -26,6 +29,9 @@ with (ROOT / "tax_2024.json").open() as f:
 # every place in surtax must appear in codes
 # but not every place is assigned a surtax
 # assert TAX_PER_TOWN.keys() <= CODES.keys()
+
+def format_float(n: float) -> str:
+    return locale.format_string("%.2f", n)
 
 def check_oib(oib: str):
     """Check if OIB is valid and return True if it is."""
@@ -175,12 +181,12 @@ def main(
     bruto, tax, surtax, neto = taxify(total_money_eur, tax_rate)
     typer.echo(f"INFO: Code for {town}: {CODES[town]}")
     typer.echo(f"INFO: JOPPD code: {joppd_code}")
-    typer.echo(f"INFO: Conversion rate (€ => $) @ {date.date().strftime('%Y-%m-%d')}: {float(conversion_rate)}")
-    typer.echo(f"INFO: {gsu_amount} GSUs × {float(gsu_price):.2f}$ = {float(total_money_usd):.2f}$ = {float(total_money_eur):.2f}€")
-    typer.echo(f"INFO: bruto  = {float(bruto):.2f}€")
-    typer.echo(f"INFO: tax    = {float(tax):.2f}€")
-    typer.echo(f"INFO: neto   = {float(neto):.2f}€")
-    typer.echo(f"INFO: TOTAL COST (tax) = {float(tax):.2f}€")
+    typer.echo(f"INFO: Conversion rate (€ => $) @ {date.date().strftime('%Y-%m-%d')}: {format_float(float(conversion_rate))}")
+    typer.echo(f"INFO: {gsu_amount} GSUs × {format_float(float(gsu_price))}$ = {format_float(float(total_money_usd))}$ = {format_float(float(total_money_eur))}€")
+    typer.echo(f"INFO: bruto  = {format_float(float(bruto))}€")
+    typer.echo(f"INFO: tax    = {format_float(float(tax))}€")
+    typer.echo(f"INFO: neto   = {format_float(float(neto))}€")
+    typer.echo(f"INFO: TOTAL COST (tax) = {format_float(float(tax))}€")
     if typer.confirm("Do you want to generate JOPPD?", default=True):
         filename = generate_joppd(
                 first_name=first_name,
