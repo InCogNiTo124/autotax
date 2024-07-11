@@ -153,7 +153,7 @@ def main(
     street_number: Annotated[int, typer.Option(prompt=True)],
     email_address: Annotated[str, typer.Option(prompt=True)],
     gsu_price_raw: Annotated[str, typer.Option(prompt="GSU price (USD)")],
-    gsu_amount: Annotated[int, typer.Option(prompt="GSU amount")],
+    gsu_amount: Annotated[float, typer.Option(prompt="GSU amount")],
     ):
     town = town.lower()
     if town not in CODES:
