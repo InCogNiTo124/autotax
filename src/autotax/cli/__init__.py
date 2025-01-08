@@ -64,7 +64,15 @@ def conversion_rate_for_date(date: datetime):
     srednji_tecaj = response['srednji_tecaj']
     return fractions.Fraction(srednji_tecaj.replace(',', '.'))
 
-def taxify(total_money, tax_rate):
+def taxify_no_grossup(total_money, tax_rate):
+    bruto_raw = total_money
+    bruto = round(bruto_raw, 2)
+    tax = round(bruto*tax_rate, 2)
+    surtax = fractions.Fraction(0)
+    neto = bruto - tax - surtax
+    return bruto, tax, surtax, neto
+
+def taxify_grossup(total_money, tax_rate):
     bruto_raw = total_money / (1-tax_rate)
     bruto = round(bruto_raw, 2)
     tax = round(bruto*tax_rate, 2)
@@ -85,7 +93,7 @@ def generate_joppd(*,
     surtax: fractions.Fraction,
     bruto: fractions.Fraction,
     neto: fractions.Fraction,
-    street_number: int
+    street_number: int,
     ):
     print(date)
     form_name_template = "ObrazacJOPPD_{oib}_{day:02}{month:02}{year:04}_{joppd_code}_8.xml"
@@ -161,6 +169,7 @@ def main(
     email_address: Annotated[str, typer.Option(prompt=True)],
     gsu_price_raw: Annotated[str, typer.Option(prompt="GSU price (USD)")],
     gsu_amount: Annotated[float, typer.Option(prompt="GSU amount")],
+    gross_up: Annotated[bool, typer.Option(help="Calculate tax by grossing up. You should definitely do that")]=True,
     ):
     town = town.lower()
     if town not in CODES:
@@ -179,7 +188,10 @@ def main(
     conversion_rate = conversion_rate_for_date(date)
     total_money_usd = gsu_amount * gsu_price
     total_money_eur = round(total_money_usd / conversion_rate, 2)
-    bruto, tax, surtax, neto = taxify(total_money_eur, tax_rate)
+    if gross_up:
+        bruto, tax, surtax, neto = taxify_grossup(total_money_eur, tax_rate)
+    else:
+        bruto, tax, surtax, neto = taxify_no_grossup(total_money_eur, tax_rate)
     typer.echo(f"INFO: Code for {town}: {CODES[town]}")
     typer.echo(f"INFO: JOPPD code: {joppd_code}")
     typer.echo(f"INFO: Conversion rate (€ => $) @ {date.date().strftime('%Y-%m-%d')}: {format_float(float(conversion_rate))}")
