@@ -30,6 +30,6 @@ jobs:
 
       - name: Release
         run: |
-          gh release create -p -t "autotax release ${GITHUB_REF}" --latest dist/autotax-py3-none-any.whl
+          gh release create v${GITHUB_SHA:0:7} -p -t "autotax release ${GITHUB_SHA:0:7}" --latest ./dist/autotax-py3-none-any.whl
         env:
           GH_TOKEN: ${{ github.token }}
