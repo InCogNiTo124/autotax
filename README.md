@@ -5,12 +5,10 @@
 
 ## Installation
 
-[Download the latest release here](https://github.com/photomath/autotax/releases/download/v0.0.3/autotax-0.0.3-py3-none-any.whl)
-
 ```console
 (~/Public/porezi)$ python3 -m venv autotax
 (~/Public/porezi)$ ./autotax/bin/activate
-(~/Public/porezi)$ (autotax) pip install autotax-0.0.3-py3-none-any.whl
+(~/Public/porezi)$ (autotax) pip install https://github.com/InCogNiTo124/autotax/releases/latest/download/autotax-0+pretend-py3-none-any.whl
 ```
 
 ## Usage
@@ -43,7 +41,9 @@ Options:
 
 # Advanced: QEMU for doing the taxes
 
-Due to the bizarre constraints by Porezna Uprava RH, it's only possible to upload the generated `.xml` in Windows. This tutorial shows you how to use QEMU for virtualizing windows for tax purposes.
+Due to the bizarre constraints by Porezna Uprava RH, it's only possible to
+upload the generated `.xml` in Windows. This tutorial shows you how to use QEMU
+for virtualizing windows for tax purposes.
 
 <details>
 <summary>Linux</summary>
@@ -72,7 +72,8 @@ $ yay -Sy quickemu
 $ quickget windows 11  # or some other supported Windows version
 ```
 
-**NOTE: This will populate your working directory. Be careful where you run this command. It's best to be inside `~/Public/porezi` directory.**
+**NOTE: This will populate your working directory. Be careful where you run this
+command. It's best to be inside `~/Public/porezi` directory.**
 
 ### 3. Start the virtual machine and install Windows
 
@@ -82,7 +83,8 @@ To run QEMU, run:
 $ quickemu --vm windows-11.conf
 ```
 
-This command outputs some stuff. Take note of this line, we'll be needing it later:
+This command outputs some stuff. Take note of this line, we'll be needing it
+later:
 
 ```
 ...
@@ -90,7 +92,8 @@ This command outputs some stuff. Take note of this line, we'll be needing it lat
 ...
 ```
 
-Just install Windows like you would on a real computer, by picking the keyboard, accepting the EULA etc.
+Just install Windows like you would on a real computer, by picking the keyboard,
+accepting the EULA etc.
 
 Your default user will be `Quickemu` and default password `quickemu`.
 
@@ -98,26 +101,30 @@ TODO: image
 
 ### 4. Create a portal to your host OS
 
-By `Host OS` I mean your Linux OS. We'll be exposing the `~/Public` directory of your host by exporting it as a network location to Windows.
+By `Host OS` I mean your Linux OS. We'll be exposing the `~/Public` directory of
+your host by exporting it as a network location to Windows.
 
-Open up `Windows explorer`, go to `This PC` and `<Right Click> -> Add a network location`.
+Open up `Windows explorer`, go to `This PC` and
+`<Right Click> -> Add a network location`.
 
 ![Add a network location for the Public folder](windows3.png)
 
-Click `Next`
-Click `Next` again.
+Click `Next` Click `Next` again.
 
-Write the IP address above, _but with slashes substituted with backslashes_, like this:
+Write the IP address above, _but with slashes substituted with backslashes_,
+like this:
 
 ![Write the url with backslashes](windows3-2.png)
 
 Press `OK`.
 
-You can now visit your `~/Public/porezi` folder in Windows! If you put your generated XML files here, you can upload them to e-porezna directly.
+You can now visit your `~/Public/porezi` folder in Windows! If you put your
+generated XML files here, you can upload them to e-porezna directly.
 
 ### 5. Login to e-porezna
 
-Login to `https://e-porezna.porezna-uprava.hr` using your favourite authentication method.
+Login to `https://e-porezna.porezna-uprava.hr` using your favourite
+authentication method.
 
 ![e-porezna login page](windows4.png)
 
@@ -129,13 +136,14 @@ Visit `Dostavi obrazac` and click `JOPPD -> Dostavi datoteku`.
 
 Click the button `Odaberi datoteku`.
 
-The e-porezna setup should then lead you through a procedure of installing the necessary software support. Namely, there are two components, a browser add-on, and a `.msi` you download and install.
-
+The e-porezna setup should then lead you through a procedure of installing the
+necessary software support. Namely, there are two components, a browser add-on,
+and a `.msi` you download and install.
 
 ### 7. Profit
 
-After the installation, you can continue by uploading the XML and finishing with your tax submission. Whether or not you actually _pay_ is none of my concerns.
-
+After the installation, you can continue by uploading the XML and finishing with
+your tax submission. Whether or not you actually _pay_ is none of my concerns.
 
 </details>
 
