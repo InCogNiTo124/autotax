@@ -1,0 +1,32 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    # all steps use code from main because I hate myself
+    steps:
+      - name: Checkout
+        uses: actions/checkout@main
+
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@main
+        with:
+          version: "latest"
+
+      # this step creates dist/autotax-0+pretend-py3-none-any.whl
+      - name: Build
+        run: uv build
+
+      - name: Release
+        run: |
+          gh release create v${GITHUB_SHA:0:7} -t "autotax release ${GITHUB_SHA:0:7}" --latest "./dist/autotax-0+pretend-py3-none-any.whl"
+        env:
+          GH_TOKEN: ${{ github.token }}
