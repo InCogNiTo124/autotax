@@ -52,3 +52,8 @@ include = [
 [tool.hatch.build.targets.wheel]
 packages = ["src/autotax"]
 
+[dependency-groups]
+dev = [
+    "hatch>=1.7.0",
+]
+
