@@ -29,9 +29,5 @@ jobs:
         run: 'mv -v "dist/autotax-0+pretend-py3-none-any.whl" "dist/autotax-py3-none-any.whl"'
 
       - name: Release
-        uses: softprops/action-gh-release@master
-        if: startsWith(github.ref, 'refs/heads/master')
-        with:
-          name: "autotax release ${GITHUB_SHA:0:7}"
-          files: dist/autotax-py3-none-any.whl
-          prerelease: true
+        run: |
+          gh release create -p -t "autotax release ${GITHUB_REF}" --latest dist/autotax-py3-none-any.whl
