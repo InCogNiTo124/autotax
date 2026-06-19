@@ -24,12 +24,7 @@ ROOT = Path(__file__).parent.parent
 with (ROOT / "codes.json").open() as f:
     CODES = json.load(f)
 
-with (ROOT / "tax_2024.json").open() as f:
-    TAX_PER_TOWN = json.load(f)
-
-# every place in surtax must appear in codes
-# but not every place is assigned a surtax
-# assert TAX_PER_TOWN.keys() <= CODES.keys()
+TAX_RATE_PERCENT = 24.00
 
 def format_float(n: float) -> str:
     return locale.format_string("%.2f", n)
@@ -176,7 +171,7 @@ def main(
         print(f'ERROR: town {town} does not exist. Exiting!')
         raise typer.Exit(code=1)
     gsu_price = fractions.Fraction(gsu_price_raw)
-    tax_rate = fractions.Fraction.from_decimal(fractions.Decimal.from_float(TAX_PER_TOWN[town])) / 100
+    tax_rate = fractions.Fraction.from_decimal(fractions.Decimal.from_float(TAX_RATE_PERCENT)) / 100
     typer.echo(f"Person: {first_name.capitalize()} {last_name.capitalize()}")
     typer.echo(f"        {street_name.capitalize()} {str(street_number)}, {town}")
     typer.echo(f"        {email_address}")
